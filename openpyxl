@@ -16,7 +16,7 @@ def is_date(value):
         return False
 
 # Diretório onde os arquivos Excel estão localizados
-dir_path = r'C:\Users\victor.mazakina\Desktop\CREDENCIADOS'
+dir_path = r'C:\endereço da pasta '
 
 # Listar todos os arquivos Excel no diretório
 excel_files = [f for f in os.listdir(dir_path) if f.endswith('.xlsx') or f.endswith('.xls')]
