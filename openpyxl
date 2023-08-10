@@ -1,0 +1,52 @@
+#EXCLUIR CABEÇALHO - ULTIMA LINHA - GERAL PARA NUMEROS - DATA 
+
+
+import pandas as pd
+import os
+import datetime
+from openpyxl import load_workbook
+from openpyxl.styles import Alignment
+
+# Função para verificar se o valor é uma data
+def is_date(value):
+    try:
+        datetime.datetime.strptime(str(value), '%d/%m/%Y')
+        return True
+    except:
+        return False
+
+# Diretório onde os arquivos Excel estão localizados
+dir_path = r'C:\Users\victor.mazakina\Desktop\CREDENCIADOS'
+
+# Listar todos os arquivos Excel no diretório
+excel_files = [f for f in os.listdir(dir_path) if f.endswith('.xlsx') or f.endswith('.xls')]
+
+# Processar cada arquivo Excel
+for excel_file in excel_files:
+    file_path = os.path.join(dir_path, excel_file)
+    
+    # Ler o arquivo Excel em um DataFrame
+    df = pd.read_excel(file_path)
+
+    # Excluir a última linha
+    df = df.iloc[:-1, :]
+
+    # Salvar o DataFrame modificado de volta no arquivo Excel sem o cabeçalho
+    df.to_excel(file_path, index=False, header=False, engine='openpyxl')
+
+    # Carregar o arquivo Excel com openpyxl para ajustar o estilo
+    workbook = load_workbook(file_path)
+    worksheet = workbook.active
+
+    # Definir o formato conforme necessário
+    for row in worksheet.iter_rows():
+        for cell in row:
+            if is_date(cell.value):
+                cell.number_format = 'DD/MM/YYYY'  # Formato de data
+            else:
+                cell.number_format = '0'  # Formato numérico
+
+    # Salvar as alterações no arquivo
+    workbook.save(file_path)
+
+print('Processamento concluído!')
